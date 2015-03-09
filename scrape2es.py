@@ -8,6 +8,7 @@ from storers import ESDataStorer
 
 __author__ = 'guglielmo'
 
+
 class ScrapeCommand(object):
 
     def __init__(self):
@@ -60,6 +61,7 @@ The currently available source types are:
             description='Scrape data from the Anagrafe section of http://amministratori.interno.it/')
         args = self.parseargs(parser)
         print('Running scrape2es minint, url=%s' % args.url)
+
         dsc = MinintDataScraper(args.url, args.log_level)
         dst = ESDataStorer(
             es_index=args.es_url.split("/")[-2],
@@ -67,7 +69,7 @@ The currently available source types are:
             es_url="/".join(args.es_url.split("/")[:-2]),
             es_delete=args.es_delete,
             es_batchsize=args.es_batchsize,
-            log_level=args.log_level
+            log_level=args.log_level,
         )
 
         # What's scraped is stored.
@@ -88,7 +90,7 @@ The currently available source types are:
             es_url="/".join(args.es_url.split("/")[:-2]),
             es_delete=args.es_delete,
             es_batchsize=args.es_batchsize,
-            log_level=args.log_level
+            log_level=args.log_level,
         )
 
         # What's scraped is stored.

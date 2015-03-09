@@ -49,7 +49,7 @@ class DataStorer(object):
 class ESDataStorer(DataStorer):
 
     def __init__(self, es_url,
-                 es_index, es_doctype, es_version='v1',
+                 es_index, es_doctype,
                  es_batchsize=0, es_delete=False,
                  log_level='info'
     ):
@@ -59,14 +59,15 @@ class ESDataStorer(DataStorer):
         self.es_url = es_url
         self.es_index = es_index
         self.es_doctype = es_doctype
-        self.es_version = es_version
         self.es_batchsize = es_batchsize
         self.es_delete = es_delete
 
         self.logger.setLevel(getattr(logging, self.log_level.upper(), logging.WARNING))
 
         self.est = tortilla.wrap(self.es_url)
+
         self.es_setup()
+
 
 
 
@@ -91,7 +92,7 @@ class ESDataStorer(DataStorer):
 
             bulk_data.append({
                 'index':{
-                    '_index': '{0}_{1}'.format(self.es_index, self.es_version),
+                    '_index': self.es_index,
                     '_type': self.es_doctype,
                     '_id': row.pop('unique_id')
                 }
@@ -122,7 +123,7 @@ class ESDataStorer(DataStorer):
             cleaned_group = [g for g in group if g]
             datastring = "\n".join(map(json.dumps, cleaned_group)) + "\n"
             self.est._bulk.post(data=datastring,req_format=None)
-            self.est.politici._refresh.post()
+            self.est.post('{0}/_refresh'.format(self.es_index))
             c += int(len(cleaned_group)/2)
             self.logger.info("{0} record sent".format(c))
 
@@ -134,37 +135,28 @@ class ESDataStorer(DataStorer):
         :param version:
         :return:
         """
-        # create politici_version, if non-existing
+        # create politici_version index, if non-existing
         try:
-            self.est.head('{0}_{1}'.format(self.es_index, self.es_version))
+            self.est.head(self.es_index)
         except HTTPError as e:
             if e.response.status_code == 401:
                 self.logger.error(e)
                 quit()
+            elif e.response.status_code == 404:
+                self.est.put(self.es_index)
+                self.logger.info("Index created")
             else:
-                err = json.loads(e.response.content.decode('utf-8'))
-                if err['status'] == '404':
-                    self.est.put('{0}_{1}'.format(self.es_index, self.es_version))
-                    self.logger.info("Index created")
+                self.logger.error(e)
+                quit()
         except Exception as e:
             self.logger.error(e)
             quit()
 
-        # generate alias, pointing to versioned index
-        self.est._aliases.post(data={
-                "actions": [
-                { "add": {
-                    "alias": "{0}".format(self.es_index),
-                    "index": "{0}_{1}".format(self.es_index, self.es_version)
-                }}
-            ]
-        })
-
         # remove all docs of type given, if present
         if self.es_delete:
             try:
-                self.est.head("{0}/{1}".format(self.es_index, self.es_doctype))
-                self.est.delete("{0}/{1}".format(self.es_index, self.es_doctype))
+                self.est.head(self.es_index)
+                self.est.delete(self.es_index)
             except HTTPError as e:
                 err = e.response
                 if err.status_code == 404:
@@ -173,48 +165,25 @@ class ESDataStorer(DataStorer):
                     quit()
 
 
-        # adding raw fields for aggregations
-        # todo: move out of the store method, refers to data being parsed
-        # self.est.put(
-        #     "{0}/_mapping/{1}".format(
-        #         self.es_index, self.es_doctype
-        #     ),
-        #     data={
-        #       self.es_doctype : {
-        #         "properties" : {
-        #           "titolo_studio" : {
-        #             "fields" : {
-        #               "raw" : {"type" : "string", "index" : "not_analyzed"}
-        #             }
-        #           },
-        #           "professione" : {
-        #             "fields" : {
-        #               "raw" : {"type" : "string", "index" : "not_analyzed"}
-        #             }
-        #           },
-        #           "descrizione_carica" : {
-        #             "fields" : {
-        #               "raw" : {"type" : "string", "index" : "not_analyzed"}
-        #             }
-        #           },
-        #           "denominazione_comune" : {
-        #             "fields" : {
-        #               "raw" : {"type" : "string", "index" : "not_analyzed"}
-        #             }
-        #           },
-        #           "denominazione_provincia" : {
-        #             "fields" : {
-        #               "raw" : {"type" : "string", "index" : "not_analyzed"}
-        #             }
-        #           },
-        #           "denominazione_regione" : {
-        #             "fields" : {
-        #               "raw" : {"type" : "string", "index" : "not_analyzed"}
-        #             }
-        #           }
-        #         }
-        #       }
-        #     }
-        # )
+        # generate alias, pointing to versioned index
+        # self.est._aliases.post(data={
+        #         "actions": [
+        #         { "add": {
+        #             "alias": "{0}".format(self.es_index),
+        #             "index": "{0}_{1}".format(self.es_index, self.es_version)
+        #         }}
+        #     ]
+        # })
+
+        # adding mapping overrides
+        # if self.mapping_overrides:
+        #     self.est.put(
+        #         "{0}/_mapping/{1}".format(
+        #             self.es_index, self.es_doctype
+        #         ),
+        #         data=self.mapping_overrides,
+        #         debug=True
+        #
+        #     )
 
 
