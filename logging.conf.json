@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "formatters": {
+    "simple": {
+      "format": "%(message)s"
+    },
+    "detailed": {
+      "format": "[%(asctime)s] - %(name)s - %(levelname)s - %(message)s"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "detailed",
+      "stream": "ext://sys.stdout"
+    },
+    "file": {
+      "class": "logging.FileHandler",
+      "level": "WARNING",
+      "formatter": "simple",
+      "filename": "import.log",
+      "mode": "w"
+    }
+
+  },
+  "loggers": {
+    "import_script": {
+      "level": "DEBUG",
+      "handlers": ["console", "file"],
+      "propagate": "no"
+    },
+    "root": {
+      "level": "DEBUG",
+      "handlers": ["console"]
+    }
+  }
+}

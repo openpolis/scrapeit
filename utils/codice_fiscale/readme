@@ -1,0 +1,27 @@
+CALCOLO DEL CODICE FISCALE
+==========================
+
+Un esercizio di riscrittura di un semplice programma di calcolo del codice 
+fiscale. 
+L'originale, scritto da Beppe, Gennaro, Guldo, Markon, si puo' trovare qui
+http://www.python-it.org/07/08/15/wxpython-codice-fiscale
+
+L'esercizio di riscrittura e' stato seguito, insieme a Bancaldo, su questo 
+thread http://www.python-it.org/forum/index.php?topic=6630.0
+
+Il software calcola il codice fiscale italiano a partire dagli algoritmi 
+descritti in http://it.wikipedia.org/wiki/Codice_fiscale (ma attenzione a 
+http://it.wikipedia.org/wiki/Omocodia per importanti limitazioni sull'uso di 
+questo programma). 
+
+Si compone di questi file:
+1) codicefiscale.py contiene le routine di calcolo, e una spartana ui testuale.
+2) db.py contiene le query necessarie al database dei codici istat dei 
+   comuni italiani, e inoltre alcune query accessorie, che servono per la gui.
+3) gui.py e' una semplice gui scritta in wxPython (l'entry-point del programma, 
+   se volete la gui!).
+4) test.py e' una collezione di test per codicefiscale.py
+5) codici.db e' il database dei codici istat dei comuni italiani.
+
+
+Licenza: GNU GPL
