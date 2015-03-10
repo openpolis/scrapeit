@@ -156,7 +156,7 @@ class ESDataStorer(DataStorer):
         if self.es_delete:
             try:
                 self.est.head(self.es_index)
-                self.est.delete(self.es_index)
+                self.est.delete("{0}/{1}".format(self.es_index, self.es_doctype))
             except HTTPError as e:
                 err = e.response
                 if err.status_code == 404:
