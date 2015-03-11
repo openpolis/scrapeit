@@ -125,6 +125,7 @@ class MinintCSVDictReader(DictReaderInsensitive):
         except DataScraperException as e:
             return  (e, row)
 
+        row['istituzione'] = self.institution
         row['unique_id'] = self.get_unique_id(row)
 
         return row
@@ -165,6 +166,7 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
         except DataScraperException as e:
             return  (e, row)
 
+        row['istituzione'] = self.institution
         row['unique_id'] = self.get_unique_id(row)
 
         return row
