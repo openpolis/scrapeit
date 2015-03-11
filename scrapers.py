@@ -96,7 +96,7 @@ class MinintCSVDictReader(DictReaderInsensitive):
 
 
     def get_unique_id(self, row):
-        istituzione = 'institution'
+        istituzione = self.institution
         localita = 'nd'
         key = "denominazione_{0}".format(self.institution)
         localita = row[key]

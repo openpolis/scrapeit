@@ -175,15 +175,5 @@ class ESDataStorer(DataStorer):
         #     ]
         # })
 
-        # adding mapping overrides
-        # if self.mapping_overrides:
-        #     self.est.put(
-        #         "{0}/_mapping/{1}".format(
-        #             self.es_index, self.es_doctype
-        #         ),
-        #         data=self.mapping_overrides,
-        #         debug=True
-        #
-        #     )
 
 
