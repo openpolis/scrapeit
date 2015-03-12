@@ -139,7 +139,7 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
         localita = row[key]
 
         start_date = datetime.strptime(row['data_nomina'], "%d/%m/%Y").strftime("%Y%m%d")
-        end_date = datetime.strptime(row['data_nomina'], "%d/%m/%Y").strftime("%Y%m%d")
+        end_date = datetime.strptime(row['data_cessazione'], "%d/%m/%Y").strftime("%Y%m%d")
 
         unique_id = slugify(
             "-".join([
