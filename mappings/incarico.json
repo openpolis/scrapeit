@@ -1,0 +1,30 @@
+{
+  "incarico": {
+    "properties": {
+      "nome": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "cognome": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "data_nascita": {"type": "date", "format": "dd/MM/YYYY"},
+      "sesso": {"index": "not_analyzed", "type": "string"},
+      "luogo_nascita": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "codice_fiscale": {"index": "not_analyzed", "type": "string"},
+      "codice_comune": {"index": "not_analyzed", "type": "string"},
+      "codice_regione": {"index": "not_analyzed", "type": "string"},
+      "codice_provincia": {"index": "not_analyzed", "type": "string"},
+      "denominazione_comune": {"index": "not_analyzed", "type": "string"},
+      "popolazione_censita": {"type": "integer"},
+      "sigla_provincia": {"index": "not_analyzed", "type": "string"},
+      "denominazione_comune": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "denominazione_provincia": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "denominazione_regione": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "descrizione_carica": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "istituzione": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "data_elezione": {"type": "date", "format": "dd/MM/YYYY"},
+      "data_entrata_in_carica": {"type": "date", "format": "dd/MM/YYYY"},
+      "titolo_accademico": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "partito": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "professione": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "titolo_studio": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"}
+    }
+  }
+}
+

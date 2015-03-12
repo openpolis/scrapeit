@@ -1,0 +1,38 @@
+{
+  "incarico_storico": {
+    "properties": {
+      "nome": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "cognome": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "data_nascita": {"type": "date", "format": "dd/MM/YYYY"},
+      "sesso": {"index": "not_analyzed", "type": "string"},
+      "desc_sede_nascita": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "codice_fiscale": {"index": "not_analyzed", "type": "string"},
+      "cod_comune": {"index": "not_analyzed", "type": "string"},
+      "cod_regione": {"index": "not_analyzed", "type": "string"},
+      "cod_provincia": {"index": "not_analyzed", "type": "string"},
+      "popolazione_censita": {"type": "integer"},
+      "sigla_provincia": {"index": "not_analyzed", "type": "string"},
+      "desc_comuine": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "desc_provincia": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "desc_regione": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "descrizione_carica": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "istituzione": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "data_movimentazione": {"type": "date", "format": "dd/MM/YYYY"},
+      "data_tempo_elettorale": {"type": "date", "format": "dd/MM/YYYY"},
+      "data_nomina": {"type": "date", "format": "dd/MM/YYYY"},
+      "data_cessazione": {"type": "date", "format": "dd/MM/YYYY"},
+      "data_movimentazione": {"type": "date", "format": "dd/MM/YYYY"},
+      "sigla_titolo_accademico": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "desc_partito": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "professione": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "titolo_di_studio": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
+      "assessori_assegnati": {"type": "integer"},
+      "consiglieri_spettanti": {"type": "integer"},
+      "descrizione": {"type": "string"},
+      "tipo_movimentazione": {"type": "string", "index": "not_analyzed"},
+      "cod_movimentazione": {"type": "integer"},
+      "seq_ordina": {"type": "integer"},
+      "desc_tempo_gestione": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"}
+    }
+  }
+}
