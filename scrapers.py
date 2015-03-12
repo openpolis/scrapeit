@@ -13,7 +13,7 @@ import zipfile
 from slugify import slugify
 from utils import DictReaderInsensitive, DictInsensitive
 from utils.codice_fiscale import db
-from utils.codice_fiscale.codicefiscale import codice_fiscale
+from utils.codice_fiscale.codicefiscale import codice_fiscale, codice_cognome, codice_nome
 
 __author__ = 'guglielmo'
 
@@ -120,10 +120,16 @@ class MinintCSVDictReader(DictReaderInsensitive):
     def __next__(self):
         row = DictReaderInsensitive.__next__(self)
 
-        try:
-            row['codice_fiscale'] = self.get_codice_fiscale(**row)
-        except DataScraperException as e:
-            return  (e, row)
+        if 'commissario' in row['descrizione_carica'].lower():
+            row['codice_fiscale'] = "{0}{1}---------C".format(
+                codice_cognome(row['cognome']),
+                codice_nome(row['nome'])
+            )
+        else:
+            try:
+                row['codice_fiscale'] = self.get_codice_fiscale(**row)
+            except DataScraperException as e:
+                return  (e, row)
 
         row['istituzione'] = self.institution
         row['unique_id'] = self.get_unique_id(row)
@@ -157,15 +163,21 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
     def __next__(self):
         row = DictReaderInsensitive.__next__(self)
 
-        try:
-            row['codice_fiscale'] = self.get_codice_fiscale(
-                nome=row['nome'], cognome=row['cognome'],
-                data_nascita=row['data_nascita'],
-                luogo_nascita=row['desc_sede_nascita'],
-                sesso=row['sesso']
+        if 'commissario' in row['descrizione_carica'].lower():
+            row['codice_fiscale'] = "{0}{1}---------C".format(
+                codice_cognome(row['cognome']),
+                codice_nome(row['nome'])
             )
-        except DataScraperException as e:
-            return  (e, row)
+        else:
+            try:
+                row['codice_fiscale'] = self.get_codice_fiscale(
+                    nome=row['nome'], cognome=row['cognome'],
+                    data_nascita=row['data_nascita'],
+                    luogo_nascita=row['desc_sede_nascita'],
+                    sesso=row['sesso']
+                )
+            except DataScraperException as e:
+                return  (e, row)
 
         row['istituzione'] = self.institution
         row['unique_id'] = self.get_unique_id(row)
