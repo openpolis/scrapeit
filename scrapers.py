@@ -119,8 +119,8 @@ class MinintCSVDictReader(DictReaderInsensitive):
 
     def __next__(self):
         row = DictReaderInsensitive.__next__(self)
-
-        if 'commissario' in row['descrizione_carica'].lower():
+        carica = row['descrizione_carica'].lower()
+        if 'commissario' in carica or 'commissione' in carica:
             row['codice_fiscale'] = "{0}{1}---------C".format(
                 codice_cognome(row['cognome']),
                 codice_nome(row['nome'])
