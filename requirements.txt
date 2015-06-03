@@ -1,5 +1,8 @@
 csvkit
 ipython[notebook]
 python-slugify
-# da sostituire col package, se viene accettata la pull request
--e git+git@github.com:openpolis/tortilla.git@bafd7f1ef01b0090dd2dc52de46a77cc4460f507#egg=tortilla-dev-reqresp-format
+elasticsearch
+poplus-pci
+
+# da sostituire col package, quando viene pubblicato su pypi
+-e git+git@github.com:redodo/tortilla.git@develop#egg=tortilla-dev

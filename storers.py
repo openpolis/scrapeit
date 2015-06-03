@@ -122,7 +122,7 @@ class ESDataStorer(DataStorer):
         for group in grouped_bulk_data:
             cleaned_group = [g for g in group if g]
             datastring = "\n".join(map(json.dumps, cleaned_group)) + "\n"
-            self.est._bulk.post(data=datastring,req_format=None)
+            self.est._bulk.post(data=datastring,format=(None, 'json'))
             self.est.post('{0}/_refresh'.format(self.es_index))
             c += int(len(cleaned_group)/2)
             self.logger.info("{0} record sent".format(c))

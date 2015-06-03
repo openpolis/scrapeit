@@ -85,7 +85,7 @@ class MinintCSVDictReader(DictReaderInsensitive):
 
         try:
             return codice_fiscale(
-                first_name, last_name, birth_date, sesso,
+                last_name, first_name, birth_date, sesso,
                 birth_place['state'], birth_place['prov'], birth_place['city'],
                 con.codici_geografici
             )
@@ -171,7 +171,7 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
         else:
             try:
                 row['codice_fiscale'] = self.get_codice_fiscale(
-                    nome=row['nome'], cognome=row['cognome'],
+                    cognome=row['cognome'], nome=row['nome'],
                     data_nascita=row['data_nascita'],
                     luogo_nascita=row['desc_sede_nascita'],
                     sesso=row['sesso']

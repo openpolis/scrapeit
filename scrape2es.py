@@ -14,7 +14,7 @@ class ScrapeCommand(object):
     def __init__(self):
         parser = argparse.ArgumentParser(
             description='Scrape data from given sources',
-            usage='''scrape <source_type> [<args>]
+            usage='''scrape2es.py <source_type> [<args>]
 
 The currently available source types are:
    minint           Active administratorss
