@@ -55,4 +55,7 @@ target/
 
 # PyCharm
 .idea
+
+# contains passwords
+popit_import.py
  
