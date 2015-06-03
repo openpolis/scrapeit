@@ -164,18 +164,10 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
         row = DictReaderInsensitive.__next__(self)
 
         if 'commissario' in row['descrizione_carica'].lower():
-            row['codice_fiscale'] = "{0}{1}---------C".format(
-                codice_cognome(row['cognome']),
-                codice_nome(row['nome'])
-            )
+            row['codice_fiscale'] = "{cognome} {nome}".format(**row)
         else:
             try:
-                row['codice_fiscale'] = self.get_codice_fiscale(
-                    cognome=row['cognome'], nome=row['nome'],
-                    data_nascita=row['data_nascita'],
-                    luogo_nascita=row['desc_sede_nascita'],
-                    sesso=row['sesso']
-                )
+                row['codice_fiscale'] = "{cognome} {nome} {data_nascita} {desc_sede_nascita} {sesso}".format(**row)
             except DataScraperException as e:
                 return  (e, row)
 
