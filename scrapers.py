@@ -13,12 +13,7 @@ import zipfile
 from slugify import slugify
 from utils import DictReaderInsensitive, DictInsensitive
 from utils.codice_fiscale import db
-from utils.codice_fiscale.codicefiscale import codice_fiscale, codice_cognome, codice_nome
-
 __author__ = 'guglielmo'
-
-# define connection to sqlite DB with places->catasto codes
-con = db.Connessione()
 
 # pre-compile some regular expressions used within the loops
 prov_com_re = re.compile(r'(?P<city>[\w \']+)\((?P<prov>[\w \']+)\)')
@@ -57,47 +52,8 @@ class MinintCSVDictReader(DictReaderInsensitive):
         DictReaderInsensitive.__init__(self, f, **kwargs)
         self.institution = institution
 
-    def get_codice_fiscale(self, nome, cognome, data_nascita, luogo_nascita, sesso, **kwargs):
-        first_name = nome
-        last_name = cognome
-
-        try:
-            birth_date = datetime.strptime(data_nascita, "%d/%m/%Y")
-        except ValueError as e:
-            raise DataScraperException("Impossibile parsare data nascita:{0}:.Skipping.".format(data_nascita))
-
-        birth_place = {
-            'state': 'ITALIA',
-            'prov': None,
-            'city': None
-        }
-        m = prov_com_re.match(luogo_nascita)
-        if m is None:
-            m = state_re.match(luogo_nascita)
-            if m is None:
-                raise DataScraperException("Impossibile parsare luogo nascita:{0}:.Skipping.".format(luogo_nascita))
-            birth_place['state'] = m.groupdict()['state']
-        else:
-            birth_place.update({
-                'prov': m.groupdict()['prov'].strip().upper(),
-                'city': m.groupdict()['city'].strip().upper()
-            })
-
-        try:
-            return codice_fiscale(
-                last_name, first_name, birth_date, sesso,
-                birth_place['state'], birth_place['prov'], birth_place['city'],
-                con.codici_geografici
-            )
-        except db.DBNoDataError:
-            raise DataScraperException("Impossibile determinare CF:{0}:.Skipping.".format(luogo_nascita))
-        except Exception:
-            raise DataScraperException("Impossibile determinare CF.Skipping.")
-
-
     def get_unique_id(self, row):
         istituzione = self.institution
-        localita = 'nd'
         key = "denominazione_{0}".format(self.institution)
         localita = row[key]
 
@@ -105,7 +61,7 @@ class MinintCSVDictReader(DictReaderInsensitive):
 
         unique_id = slugify(
             "-".join([
-                row['codice_fiscale'],
+                row['politico_id'],
                 row['descrizione_carica'],
                 istituzione,
                 localita,
@@ -121,13 +77,10 @@ class MinintCSVDictReader(DictReaderInsensitive):
         row = DictReaderInsensitive.__next__(self)
         carica = row['descrizione_carica'].lower()
         if 'commissario' in carica or 'commissione' in carica:
-            row['codice_fiscale'] = "{0}{1}---------C".format(
-                codice_cognome(row['cognome']),
-                codice_nome(row['nome'])
-            )
+            row['politico_id'] = slugify("{0} {1}").format(**row)
         else:
             try:
-                row['codice_fiscale'] = self.get_codice_fiscale(**row)
+                row['politico_id'] = slugify("{cognome} {nome} {data_nascita} {desc_sede_nascita} {sesso}".format(**row))
             except DataScraperException as e:
                 return  (e, row)
 
@@ -149,7 +102,7 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
 
         unique_id = slugify(
             "-".join([
-                row['codice_fiscale'],
+                row['politico_id'],
                 row['descrizione_carica'],
                 istituzione,
                 localita,
@@ -159,22 +112,6 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
         )
 
         return unique_id
-
-    def __next__(self):
-        row = DictReaderInsensitive.__next__(self)
-
-        if 'commissario' in row['descrizione_carica'].lower():
-            row['codice_fiscale'] = "{cognome} {nome}".format(**row)
-        else:
-            try:
-                row['codice_fiscale'] = "{cognome} {nome} {data_nascita} {desc_sede_nascita} {sesso}".format(**row)
-            except DataScraperException as e:
-                return  (e, row)
-
-        row['istituzione'] = self.institution
-        row['unique_id'] = self.get_unique_id(row)
-
-        return row
 
 
 class MinintDataScraper(DataScraper):

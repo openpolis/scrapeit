@@ -7,7 +7,7 @@
         "data_nascita": {"type": "date", "format": "dd/MM/YYYY", "ignore_malformed": "true"},
         "sesso": {"index": "not_analyzed", "type": "string"},
         "desc_sede_nascita": {"index": "analyzed", "fields": {"raw": {"index": "not_analyzed", "type": "string"}}, "type": "string"},
-        "codice_fiscale": {"index": "not_analyzed", "type": "string"},
+        "politico_id": {"index": "not_analyzed", "type": "string"},
         "cod_comune": {"index": "not_analyzed", "type": "string"},
         "cod_regione": {"index": "not_analyzed", "type": "string"},
         "cod_provincia": {"index": "not_analyzed", "type": "string"},
