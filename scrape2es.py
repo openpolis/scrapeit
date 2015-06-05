@@ -20,6 +20,7 @@ The currently available source types are:
    minint           Active administratorss
    minint_storici   Historical data
 ''')
+
         parser.add_argument('source_type', help='Source type')
         # parse_args defaults to [1:] for args, but you need to
         # exclude the rest of the args too, or validation will fail

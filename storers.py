@@ -87,8 +87,7 @@ class ESDataStorer(DataStorer):
                 self.logger.error(",".join(row[1].values()))
                 continue
 
-            row_values = ",".join(row.values())
-            self.logger.debug("Processing:{0}".format(row_values))
+            self.logger.debug("Processing: {0}".format(row['unique_id']))
 
             bulk_data.append({
                 'index':{

@@ -12,7 +12,6 @@ import requests
 import zipfile
 from slugify import slugify
 from utils import DictReaderInsensitive, DictInsensitive
-from utils.codice_fiscale import db
 __author__ = 'guglielmo'
 
 # pre-compile some regular expressions used within the loops
@@ -80,9 +79,13 @@ class MinintCSVDictReader(DictReaderInsensitive):
             row['politico_id'] = slugify("{0} {1}").format(**row)
         else:
             try:
-                row['politico_id'] = slugify("{cognome} {nome} {data_nascita} {desc_sede_nascita} {sesso}".format(**row))
+                row['politico_id'] = slugify("{cognome} {nome} {data_nascita} {luogo_nascita} {sesso}".format(**row))
             except DataScraperException as e:
                 return  (e, row)
+
+        # replace LISTA CIVICA | NOME with LISTA CIVICA: NOME
+        # then create a list out of the pipe separated string
+        row['desc_partito'] = [s.strip() for s in row['desc_partito'].replace('LISTA CIVICA | ', 'LISTA CIVICA: ').split('|')]
 
         row['istituzione'] = self.institution
         row['unique_id'] = self.get_unique_id(row)
@@ -98,7 +101,10 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
         localita = row[key]
 
         start_date = datetime.strptime(row['data_nomina'], "%d/%m/%Y").strftime("%Y%m%d")
-        end_date = datetime.strptime(row['data_cessazione'], "%d/%m/%Y").strftime("%Y%m%d")
+        if row['data_cessazione']:
+            end_date = datetime.strptime(row['data_cessazione'], "%d/%m/%Y").strftime("%Y%m%d")
+        else:
+            end_date = 'in carica'
 
         unique_id = slugify(
             "-".join([
@@ -113,6 +119,26 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
 
         return unique_id
 
+
+    def __next__(self):
+        row = DictReaderInsensitive.__next__(self)
+        carica = row['descrizione_carica'].lower()
+        if 'commissario' in carica or 'commissione' in carica:
+            row['politico_id'] = slugify("{0} {1}").format(**row)
+        else:
+            try:
+                row['politico_id'] = slugify("{cognome} {nome} {data_nascita} {desc_sede_nascita} {sesso}".format(**row))
+            except DataScraperException as e:
+                return  (e, row)
+
+        # replace LISTA CIVICA | NOME with LISTA CIVICA: NOME
+        # then create a list out of the pipe separated string
+        row['desc_partito'] = [s.strip() for s in row['desc_partito'].replace('LISTA CIVICA | ', 'LISTA CIVICA: ').split('|')]
+
+        row['istituzione'] = self.institution
+        row['unique_id'] = self.get_unique_id(row)
+
+        return row
 
 class MinintDataScraper(DataScraper):
 
@@ -160,7 +186,6 @@ class MinintDataScraper(DataScraper):
         archive_reader = MinintCSVDictReader(io.StringIO(archive_txt), delimiter=";", institution=institution)
 
         return archive_reader
-
 
 class MinintStoriciDataScraper(MinintDataScraper):
 

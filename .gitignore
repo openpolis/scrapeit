@@ -56,6 +56,9 @@ target/
 # PyCharm
 .idea
 
+# iPython Notebook
+.ipynb_checkpoints/
+
 # contains passwords
 popit_import.py
  

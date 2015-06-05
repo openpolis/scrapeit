@@ -27,8 +27,8 @@
   "loggers": {
     "import_script": {
       "level": "DEBUG",
-      "handlers": ["console", "file"],
-      "propagate": "no"
+      "handlers": ["console"],
+      "propagate": false
     },
     "root": {
       "level": "DEBUG",
