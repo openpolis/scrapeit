@@ -76,7 +76,7 @@ class MinintCSVDictReader(DictReaderInsensitive):
         row = DictReaderInsensitive.__next__(self)
         carica = row['descrizione_carica'].lower()
         if 'commissario' in carica or 'commissione' in carica:
-            row['politico_id'] = slugify("{0} {1}").format(**row)
+            row['politico_id'] = slugify("{cognome} {nome}").format(**row)
         else:
             try:
                 row['politico_id'] = slugify("{cognome} {nome} {data_nascita} {luogo_nascita} {sesso}".format(**row))
@@ -124,7 +124,7 @@ class MinintStoriciCSVDictReader(MinintCSVDictReader):
         row = DictReaderInsensitive.__next__(self)
         carica = row['descrizione_carica'].lower()
         if 'commissario' in carica or 'commissione' in carica:
-            row['politico_id'] = slugify("{0} {1}").format(**row)
+            row['politico_id'] = slugify("{cognome} {nome}").format(**row)
         else:
             try:
                 row['politico_id'] = slugify("{cognome} {nome} {data_nascita} {desc_sede_nascita} {sesso}".format(**row))
